@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.fty628</groupId>
+    <artifactId>sql-builder</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <!-- Build args -->
+        <file_encoding>UTF-8</file_encoding>
+        <!--<argline>-server -Xms64m -Xmx64m -XX:PermSize=64m -XX:MaxPermSize=64m</argline> -->
+        <skip_maven_deploy>false</skip_maven_deploy>
+        <updateReleaseInfo>false</updateReleaseInfo>
+        <maven.compiler.encoding>${file_encoding}</maven.compiler.encoding>
+        <project.build.sourceEncoding>${file_encoding}</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>${file_encoding}</project.reporting.outputEncoding>
+        <!-- for maven compiler plugin -->
+        <maven_compiler_plugin_version>3.6.1</maven_compiler_plugin_version>
+        <java_source_version>1.8</java_source_version>
+        <java_target_version>1.8</java_target_version>
+    </properties>
+
+    <build>
+        <pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven_compiler_plugin_version}</version>
+                <configuration>
+                    <fork>true</fork>
+                    <source>${java_source_version}</source>
+                    <target>${java_target_version}</target>
+                    <encoding>${file_encoding}</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </pluginManagement>
+    </build>
+</project>
