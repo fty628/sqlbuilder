@@ -28,6 +28,10 @@ public class S {
     public static final String JOIN_LEFT = "left join";
     public static final String JOIN_RIGHT= "right join";
 
+    public static final String ON= "on";
+
+
+
     public static final String LIMIT = "limit";
 
     public static String space(Object src){

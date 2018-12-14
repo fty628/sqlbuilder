@@ -1,6 +1,8 @@
 package com.fty.baymax.sqlbuilder;
 
+import com.fty.baymax.sqlbuilder.condition.Conditions;
 import com.fty.baymax.sqlbuilder.condition.JoinExpression;
+import com.fty.baymax.sqlbuilder.condition.PropertyExpression;
 
 import java.util.Optional;
 
@@ -26,7 +28,7 @@ public class JoinTable {
     }
 
     public JoinTable on(String columnName, String otherColumnName){
-        expression = new JoinExpression(columnName, otherColumnName);
+        expression = Conditions.eqProperty(columnName, otherColumnName);
         return this;
     }
 
@@ -41,7 +43,7 @@ public class JoinTable {
     }
 
     public String sql(QueryBuilder builder){
-        return String.join(S.SPACE, joinType.join(table), expression.toSqlString(builder));
+        return String.join(S.SPACE, joinType.join(table), S.ON, expression.toSqlString(builder));
     }
 
     public JoinType getJoinType() {
