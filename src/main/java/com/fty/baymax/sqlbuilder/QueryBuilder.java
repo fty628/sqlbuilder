@@ -182,7 +182,7 @@ public class QueryBuilder {
 
         append(selectCount, S.SELECT).append(selectCount, "count(*)").append(selectCount, from).append(selectCount, where);
         append(select, S.SELECT).append(select, column).append(select, from).append(select, where).append(select, group).append(select, order);
-        if(num > 0 && size > 0){
+        if(num >= 0 && size > 0){
             append(select, S.limit(num, size));
         }
         return new Query(parameters.toArray(), select.toString(), selectCount.toString());
