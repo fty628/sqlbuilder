@@ -97,10 +97,6 @@ public class Conditions {
 		return new PropertyExpression( columnName, ">=" , otherColumnName);
 	}
 
-	public static Expression and(Expression lhs, Expression rhs) {
-		return and( lhs, rhs);
-	}
-
 	public static Expression and(Expression...exps) {
 		if(exps.length == 0){
 			return exps[0];
@@ -108,9 +104,6 @@ public class Conditions {
 		return new LogicalExpression( S.AND, exps);
 	}
 
-	public static Expression or(Expression lhs, Expression rhs) {
-		return or (lhs , rhs);
-	}
 	public static Expression or(Expression...exps) {
 		if(exps.length == 0){
 			return exps[0];
