@@ -11,25 +11,31 @@ public class S {
     public static final String SPACE = " ";
 
 
-    static final String SELECT = "select";
-    static final String FROM = "from";
-    static final String WHERE = "where";
-    static final String ORDER_BY = "order by";
-    static final String GROUP_BY = "group by";
+    public static final String SELECT = "select";
+    public static final String FROM = "from";
+    public static final String WHERE = "where";
+    public static final String ORDER_BY = "order by";
+    public static final String GROUP_BY = "group by";
 
-    static final String AS = "as";
+    public static final String AS = "as";
 
-    static final String AND = "and";
-    static final String OR = "or";
+    public static final String AND = "and";
+    public static final String OR = "or";
 
-    static final String DESC = "desc";
-    static final String ASC = "asc";
+    public static final String DESC = "desc";
+    public static final String ASC = "asc";
 
-    static final String JOIN_LEFT = "left join";
-    static final String JOIN_RIGHT= "right join";
+    public static final String JOIN_LEFT = "left join";
+    public static final String JOIN_RIGHT= "right join";
 
-    public static String space(String src){
+    public static final String LIMIT = "limit";
+
+    public static String space(Object src){
         return SPACE + src + SPACE;
+    }
+
+    public static String limit(int s, int e){
+        return String.join(S.SPACE, LIMIT, String.valueOf(s), S.COMMA, String.valueOf(e));
     }
 
 }

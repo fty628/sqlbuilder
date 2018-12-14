@@ -2,6 +2,7 @@
 package com.fty.baymax.sqlbuilder.condition;
 
 import com.fty.baymax.sqlbuilder.Expression;
+import com.fty.baymax.sqlbuilder.S;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -97,13 +98,25 @@ public class Conditions {
 	}
 
 	public static Expression and(Expression lhs, Expression rhs) {
-		return new LogicalExpression(lhs, "and", rhs);
+		return and( lhs, rhs);
+	}
+
+	public static Expression and(Expression...exps) {
+		if(exps.length == 0){
+			return exps[0];
+		}
+		return new LogicalExpression( S.AND, exps);
 	}
 
 	public static Expression or(Expression lhs, Expression rhs) {
-		return new LogicalExpression( lhs, "or" , rhs);
+		return or (lhs , rhs);
 	}
-
+	public static Expression or(Expression...exps) {
+		if(exps.length == 0){
+			return exps[0];
+		}
+		return new LogicalExpression(S.OR, exps);
+	}
 	public static Expression not(Expression expression) {
 		return new NotExpression( expression );
 	}

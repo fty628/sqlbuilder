@@ -5,7 +5,7 @@ import com.fty.baymax.sqlbuilder.condition.JoinExpression;
 import java.util.Optional;
 
 /**
- * @TODO 类描述
+ * 连表
  * <p>
  * @developer Create by <a href="mailto:fty628@sina.com">dingxf</a> at 2018/12/12 0012
  */
@@ -29,6 +29,12 @@ public class JoinTable {
         expression = new JoinExpression(columnName, otherColumnName);
         return this;
     }
+
+    public JoinTable on(Expression expression){
+        this.expression = expression;
+        return this;
+    }
+
     public JoinTable columns(String...columns){
         this.table.columns(columns);
         return this;

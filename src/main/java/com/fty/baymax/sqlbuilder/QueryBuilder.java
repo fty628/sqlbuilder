@@ -24,18 +24,17 @@ public class QueryBuilder {
 
     private GroupBy groupBy;
 
-
+    private int num;
+    private int size;
     private List<Object> parameters;
 
-    private StringBuilder sb;
 
     public QueryBuilder() {
         columns = new ArrayList<>();
         tables = new HashMap<>();
-        sb= new StringBuilder();
     }
 
-    private QueryBuilder append(Object o){
+    private QueryBuilder append(StringBuilder sb, Object o){
         if(sb.length() > 0){
             sb.append(S.SPACE);
         }
@@ -78,33 +77,37 @@ public class QueryBuilder {
         return registerTable(joinTable.table).columns(joinTable.table.columns);
     }
 
-    public QueryBuilder where(){
+    protected QueryBuilder expression(String type, Expression ... es){
         if(expressions == null){
             expressions = new HashMap<String, List<Expression>>();
         }
-        return this;
-    }
-    protected QueryBuilder expression(String type, Expression ... es){
+
         List<Expression> list = expressions.getOrDefault(type, new ArrayList<Expression>());
         list.addAll(Arrays.asList(es));
         this.expressions.put(type,  list);
         return this;
     }
 
-    protected QueryBuilder groupBy(String ... columns){
+    public QueryBuilder groupBy(String ... columns){
         this.groupBy = GroupBy.group(columns);
         return this;
     }
 
-    protected QueryBuilder orderBy(String columnName, OrderByType orderByType){
+    public QueryBuilder orderBy(String columnName, OrderByType orderByType){
         return orderBy(new OrderBy(columnName, orderByType));
     }
 
-    protected QueryBuilder orderBy(OrderBy orderBy){
+    public QueryBuilder orderBy(OrderBy orderBy){
         if(orderByCollection == null){
             orderByCollection = new ArrayList<OrderBy>();
         }
         orderByCollection.add(orderBy);
+        return this;
+    }
+
+    public QueryBuilder page(int num, int size){
+        this.num = num;
+        this.size = size;
         return this;
     }
 
@@ -116,37 +119,73 @@ public class QueryBuilder {
         return expression(S.OR, es);
     }
 
-    private QueryBuilder assembly(){
-        append(S.SELECT);
-        if(columns == null || columns.size() <= 0){
-            append("*");
-        }else{
-            append(columns.stream().map(Column::sql).collect(Collectors.joining(S.space(S.COMMA))));
-        }
-        append(S.FROM).append(table.sql());
+    private String fromString(){
+        StringBuilder sb = new StringBuilder();
+        append(sb, S.FROM).append(sb, table.sql());
         if(joinTables != null && joinTables.size() > 0){
-            append(joinTables.stream().map(e->e.sql(this)).collect(Collectors.joining(S.SPACE)));
+            append(sb, joinTables.stream().map(e->e.sql(this)).collect(Collectors.joining(S.SPACE)));
         }
+        return sb.toString();
+    }
+
+    private String whereString(){
+        StringBuilder sb = new StringBuilder();
         if(expressions != null && expressions.size() > 0){
-            append(S.WHERE);
+            append(sb, S.WHERE);
             List<Expression> ands = expressions.get(S.AND),  ors = expressions.get(S.OR);
             if(ands != null && ands.size() > 0){
-                append(ands.stream().map(e->e.toSql(this)).collect(Collectors.joining(S.space(S.AND))));
+                append(sb, ands.stream().map(e->e.toSql(this)).collect(Collectors.joining(S.space(S.AND))));
             }
             if(ors != null && ors.size() > 0){
                 if(ands != null && ands.size() > 0){
-                    append(S.OR);
+                    append(sb, S.OR);
                 }
-                append(ors.stream().map(e->e.toSql(this)).collect(Collectors.joining(S.space(S.OR))));
+                append(sb, ors.stream().map(e->e.toSql(this)).collect(Collectors.joining(S.space(S.OR))));
             }
         }
+        return sb.toString();
+    }
+
+    private String columnString(){
+        if(columns == null || columns.size() <= 0){
+            return "*";
+        }else{
+            return columns.stream().map(Column::sql).collect(Collectors.joining(S.space(S.COMMA)));
+        }
+    }
+
+    private String groupString(){
+        StringBuilder sb = new StringBuilder();
         if(groupBy != null){
-            append(S.GROUP_BY).append(groupBy.sql(this));
+            append(sb, S.GROUP_BY).append(sb, groupBy.sql(this));
         }
+        return sb.toString();
+    }
+    private String orderString(){
+        StringBuilder sb = new StringBuilder();
         if(orderByCollection != null && orderByCollection.size() > 0){
-            append(S.ORDER_BY).append(orderByCollection.stream().map(o->o.sql(this)).collect(Collectors.joining(S.COMMA)));
+            append(sb, S.ORDER_BY).append(sb, orderByCollection.stream().map(o->o.sql(this)).collect(Collectors.joining(S.COMMA)));
         }
-        return this;
+        return sb.toString();
+    }
+
+    public Query build(){
+
+        StringBuilder selectCount = new StringBuilder(),
+                select = new StringBuilder();
+
+        String column = columnString(),
+                from = fromString(),
+                where = whereString(),
+                group = groupString(),
+                order = orderString();
+
+        append(selectCount, S.SELECT).append(selectCount, "count(*)").append(selectCount, from).append(selectCount, where);
+        append(select, S.SELECT).append(select, column).append(select, from).append(select, where).append(select, group).append(select, order);
+        if(num > 0 && size > 0){
+            append(select, S.limit(num, size));
+        }
+        return new Query(parameters.toArray(), select.toString(), selectCount.toString());
     }
 
     protected void onAssemblyExpression(Expression expression){
@@ -161,11 +200,6 @@ public class QueryBuilder {
                 parameters.add(object);
             }
         }
-    }
-
-    public Query build(){
-        this.assembly();
-        return new Query(sb.toString(), parameters.toArray());
     }
 
     private QueryBuilder registerTable(Table table){

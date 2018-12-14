@@ -12,26 +12,30 @@ import java.util.Arrays;
 public class Query {
 
     private Object[] parameters;
-
-    private String selectSql;
-
-    protected Query(String selectSql, Object[] parameters){
-        this.parameters = parameters;
-        this.selectSql = selectSql;
-    }
+    private String selectCount;
+    private String select;
 
     public static QueryBuilder builder(){
         return new QueryBuilder();
+    }
+
+    public Query(Object[] parameters, String select, String selectCount) {
+        this.parameters = parameters;
+        this.selectCount = selectCount;
+        this.select = select;
     }
 
     public Object[] parameters() {
         return parameters;
     }
 
-    public String sql() {
-        return selectSql;
+    public String selectCount() {
+        return selectCount;
     }
 
+    public String select() {
+        return select;
+    }
 
     public static void main(String[] args) {
         Query query = Query.builder().select(
@@ -41,10 +45,11 @@ public class Query {
                         new JoinTable(JoinType.LEFT, "t_driver_car", "dc")
                                 .on("d.driver_key", "dc.driver_key")
                                 .columns("car_type","car_length","car_load_value","car_license")
-                ).
-                where().and(Conditions.eq("d.driver_key", 1161)).or(Conditions.eq("dc.car_length", 5.6)).groupBy("t_driver.driver_key").orderBy("t_driver.driver_key", OrderByType.DESC)
-                .build();
-        System.out.println(query.sql());
+                )
+                .and(Conditions.eq("d.driver_key", 1161)).or(Conditions.eq("dc.car_length", 5.6)).groupBy("t_driver.driver_key").orderBy("t_driver.driver_key", OrderByType.DESC)
+                .page(1, 20).build();
+        System.out.println(query.selectCount);
+        System.out.println(query.select);
         System.out.println(Arrays.toString(query.parameters()));
     }
 }
