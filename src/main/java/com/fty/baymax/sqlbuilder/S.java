@@ -30,12 +30,19 @@ public class S {
 
     public static final String ON= "on";
 
-
+    public static final String NULL = "is null";
+    public static final String NOTNULL = "is not null";
 
     public static final String LIMIT = "limit";
 
     public static String space(Object src){
         return SPACE + src + SPACE;
+    }
+    public static String leftSpace(Object src){
+        return SPACE + src;
+    }
+    public static String rightSpace(Object src){
+        return src + SPACE;
     }
 
     public static String limit(int s, int e){

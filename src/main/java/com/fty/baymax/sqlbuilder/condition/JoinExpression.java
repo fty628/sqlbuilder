@@ -10,10 +10,10 @@ import com.fty.baymax.sqlbuilder.Expression;
  */
 public class JoinExpression extends Expression {
 
-    private PropertyExpression expression;
+    private ColumnExpression expression;
 
     public JoinExpression(String columnName, String otherColumnName) {
-        this.expression = new PropertyExpression(columnName, "=", otherColumnName);
+        this.expression = new ColumnExpression(columnName, "=", otherColumnName);
     }
 
     @Override

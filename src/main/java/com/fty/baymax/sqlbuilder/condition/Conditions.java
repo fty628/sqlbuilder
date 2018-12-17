@@ -66,46 +66,46 @@ public class Conditions {
 	}
 
 	public static Expression isNull(String columnName) {
-		return new SimpleExpression( columnName, "is", "null" );
+		return new NullExpression( columnName, true);
 	}
 
 	public static Expression isNotNull(String columnName) {
-		return new SimpleExpression( columnName, "is not", "null" );
+		return new NullExpression( columnName, false);
 	}
 
-	public static Expression eqProperty(String columnName, String otherColumnName) {
-		return new PropertyExpression( columnName, "=" , otherColumnName);
+	public static Expression eqColumn(String columnName, String otherColumnName) {
+		return new ColumnExpression( columnName, "=" , otherColumnName);
 	}
 
-	public static Expression neProperty(String columnName, String otherColumnName) {
-		return new PropertyExpression( columnName, "<>" , otherColumnName);
+	public static Expression neColumn(String columnName, String otherColumnName) {
+		return new ColumnExpression( columnName, "<>" , otherColumnName);
 	}
 
-	public static Expression ltProperty(String columnName, String otherColumnName) {
-		return new PropertyExpression( columnName, "<" , otherColumnName);
+	public static Expression ltColumn(String columnName, String otherColumnName) {
+		return new ColumnExpression( columnName, "<" , otherColumnName);
 	}
 
-	public static Expression leProperty(String columnName, String otherColumnName) {
-		return new PropertyExpression( columnName, "<=" , otherColumnName);
+	public static Expression leColumn(String columnName, String otherColumnName) {
+		return new ColumnExpression( columnName, "<=" , otherColumnName);
 	}
 
-	public static Expression gtProperty(String columnName, String otherColumnName) {
-		return new PropertyExpression( columnName, ">" , otherColumnName);
+	public static Expression gtColumn(String columnName, String otherColumnName) {
+		return new ColumnExpression( columnName, ">" , otherColumnName);
 	}
 
-	public static Expression geProperty(String columnName, String otherColumnName) {
-		return new PropertyExpression( columnName, ">=" , otherColumnName);
+	public static Expression geColumn(String columnName, String otherColumnName) {
+		return new ColumnExpression( columnName, ">=" , otherColumnName);
 	}
 
 	public static Expression and(Expression...exps) {
-		if(exps.length == 0){
+		if(exps.length == 1){
 			return exps[0];
 		}
 		return new LogicalExpression( S.AND, exps);
 	}
 
 	public static Expression or(Expression...exps) {
-		if(exps.length == 0){
+		if(exps.length == 1){
 			return exps[0];
 		}
 		return new LogicalExpression(S.OR, exps);
