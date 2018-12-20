@@ -7,6 +7,7 @@ package com.fty.baymax.sqlbuilder;
  */
 public class S {
 
+    public static final String PLACEHOLDER = "?";
     public static final String COMMA = ",";
     public static final String SPACE = " ";
 
@@ -48,5 +49,4 @@ public class S {
     public static String limit(int s, int e){
         return String.join(S.SPACE, LIMIT, String.valueOf(s), S.COMMA, String.valueOf(e));
     }
-
 }
